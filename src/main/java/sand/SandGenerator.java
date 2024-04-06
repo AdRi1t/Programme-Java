@@ -3,15 +3,17 @@ package sand;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.random.RandomGenerator;
 
 public class SandGenerator {
 	ArrayList<Particle> particles;
 	private double gravity = 0;
+	private float incrementTime = 0.02f;
 	private float spawnWeight = 5;
-	private float spawnVx = 0;
-	private float spawnVy = 0;
+	private float maxRandomVelocity = 10;
 	private Random random;
+	private int collisionCount = 0;
+	private float collisionCountPerSecond = 0;
+	private float lastTime = 0;
 	int width = 0;
 	int height = 0;
 
@@ -35,12 +37,12 @@ public class SandGenerator {
 		spawnWeight = weight;
 	}
 
-	public void setVx(int vx) {
-		spawnVx = vx;
+	public void setIncrementTime(float incrementTime) {
+		this.incrementTime = incrementTime;
 	}
 
-	public void setVy(int vy) {
-		spawnVy = vy;
+	public void setMaxRandomVelocity(float maxRandomVelocity) {
+		this.maxRandomVelocity = maxRandomVelocity;
 	}
 
 	public class Particle {
@@ -53,8 +55,8 @@ public class SandGenerator {
 		public Particle(float x, float y) {
 			this.x = x;
 			this.y = y;
-            this.vx = (random.nextFloat() * spawnVx) * (random.nextInt(2) == 0 ? -1 : 1);
-            this.vy = (random.nextFloat() * spawnVy) * (random.nextInt(2) == 0 ? -1 : 1);
+			this.vx = (random.nextFloat() * maxRandomVelocity) * (random.nextInt(2) == 0 ? -1 : 1);
+			this.vy = (random.nextFloat() * maxRandomVelocity) * (random.nextInt(2) == 0 ? -1 : 1);
 			this.weight = spawnWeight;
 		}
 
@@ -83,29 +85,37 @@ public class SandGenerator {
 		particles.clear();
 	}
 
-	public void updateParticles(double incrementTime) {
+	public float getCollisionCountPerSecond() {
+		return collisionCountPerSecond;
+	}
+
+	public void updateParticles() {
 		for (Particle p : particles) {
 			p.x += p.vx * incrementTime;
 			p.y += p.vy * incrementTime;
 			if (p.x < 0) {
 				p.x = 0;
 				p.vx = -p.vx;
+				collisionCount++;
 			}
-			if (p.x >= width - 2) {
-				p.x = width - 2;
+			if (p.x > width - 4) {
+				p.x = width - 4;
 				p.vx = -p.vx;
+				collisionCount++;
 			}
 			if (p.y < 0) {
 				p.y = 0;
 				p.vy = -p.vy;
+				collisionCount++;
 			}
-			if (p.y >= height - 2) {
-				p.y = height - 2;
+			if (p.y > height - 4) {
+				p.y = height - 4;
 				p.vy = -p.vy;
+				collisionCount++;
 			}
-			// p.vy += gravity * incrementTime;
 		}
 		handleCollisions();
+		updateCollisionsPerSecond();
 	}
 
 	public void handleCollisions() {
@@ -118,7 +128,9 @@ public class SandGenerator {
 				float dy = p1.y - p2.y;
 				float distance = (float) Math.sqrt((dy * dy + dx * dx));
 
-				if (distance < 8) {
+				float weightSum = p1.weight / 2 + p2.weight / 2;
+
+				if (distance < weightSum) {
 					float vx1 = p1.vx;
 					float vy1 = p1.vy;
 					float vx2 = p2.vx;
@@ -136,6 +148,15 @@ public class SandGenerator {
 
 				}
 			}
+		}
+	}
+
+	public void updateCollisionsPerSecond() {
+		lastTime += incrementTime;
+		if (lastTime > 1) {
+			collisionCountPerSecond = collisionCount / lastTime;
+			collisionCount = 0;
+			lastTime = 0;
 		}
 	}
 }

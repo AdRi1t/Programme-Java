@@ -16,7 +16,7 @@ public class Main {
         drawingPanel.addComponentListener(new WindowResizeListener(sandGenerator));
         
         Timer timer = new Timer(); 
-        timer.scheduleAtFixedRate(new SandTimerTask(sandGenerator, drawingPanel), 0L, 20L);
+        timer.scheduleAtFixedRate(new SandTimerTask(sandGenerator, drawingPanel, controlPanel), 10L, 20L);
 
         JFrame frame = new JFrame();
         frame.setSize(1000, 800);

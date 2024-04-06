@@ -12,7 +12,7 @@ import java.util.List;
 public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Color color = new Color(255, 255, 255);
-	private SandGenerator sandGenerator;
+	private transient SandGenerator sandGenerator;
 
 	public DrawingPanel(SandGenerator sandGenerator) {
 		this.sandGenerator = sandGenerator;
@@ -33,9 +33,11 @@ public class DrawingPanel extends JPanel {
 		for (Particle particle : particlesCopy) {
 			int x = (int)particle.getX();
 			int y = (int)particle.getY();
-			int weight = (int)particle.getWeight();
-			g2d.fillOval(x, y, weight, weight);
+			float weight = (int)particle.getWeight();
+			x -= weight / 2;
+			y -= weight / 2;
+			g2d.fillOval(x,y,Math.round(weight),Math.round(weight));
 		}
 		g2d.dispose();
-	}	
+	}
 }
