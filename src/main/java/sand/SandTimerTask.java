@@ -14,6 +14,6 @@ public class SandTimerTask extends TimerTask {
     @Override
     public void run() {
         drawingPanel.repaint();
-		sandGenerator.updateParticles(0.025);
+		sandGenerator.updateParticles(0.02);
     }
 }

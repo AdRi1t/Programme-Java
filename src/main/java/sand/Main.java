@@ -1,7 +1,7 @@
 package sand;
 
+import java.awt.BorderLayout;
 import java.util.Timer;
-
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -11,15 +11,17 @@ public class Main {
         SandGenerator sandGenerator = new SandGenerator(1000,800);
         MouseClickRecorder recorder = new MouseClickRecorder(sandGenerator);
         DrawingPanel drawingPanel = new DrawingPanel(sandGenerator);
+        ControlPanel controlPanel = new ControlPanel(sandGenerator);
         drawingPanel.addMouseMotionListener(recorder);
-
+        drawingPanel.addComponentListener(new WindowResizeListener(sandGenerator));
+        
         Timer timer = new Timer(); 
-        timer.scheduleAtFixedRate(new SandTimerTask(sandGenerator, drawingPanel), 0L, 25);
+        timer.scheduleAtFixedRate(new SandTimerTask(sandGenerator, drawingPanel), 0L, 20L);
 
         JFrame frame = new JFrame();
-        frame.addComponentListener(new WindowResizeListener(sandGenerator));
         frame.setSize(1000, 800);
-        frame.add(drawingPanel);
+        frame.add(controlPanel, BorderLayout.WEST);
+        frame.add(drawingPanel, BorderLayout.CENTER);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

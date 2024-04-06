@@ -7,9 +7,6 @@ import sand.SandGenerator.Particle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Shape;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DrawingPanel extends JPanel {
@@ -36,10 +33,8 @@ public class DrawingPanel extends JPanel {
 		for (Particle particle : particlesCopy) {
 			int x = (int)particle.getX();
 			int y = (int)particle.getY();
-			int[] nx = {x-2, x+2, x+2, x-2};
-			int[] ny = {y-2, y-2, y+2, y+2};
-			Shape square = new Polygon(nx, ny, 4);
-			g2d.fill(square);
+			int weight = (int)particle.getWeight();
+			g2d.fillOval(x, y, weight, weight);
 		}
 		g2d.dispose();
 	}	
