@@ -159,4 +159,11 @@ public class SandGenerator {
 			lastTime = 0;
 		}
 	}
+
+	public void moveParticles(float distanceX, float distanceY) {
+		for (Particle p : particles) {
+			p.x += 0.4*distanceX;
+			p.y += 0.4*distanceY;
+		}
+	}
 }

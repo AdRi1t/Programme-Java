@@ -16,4 +16,5 @@ public class WindowResizeListener extends ComponentAdapter {
         int newHeight = e.getComponent().getHeight();
         sandGenerator.updateSize(newWidth, newHeight);
     }
+    
 }
