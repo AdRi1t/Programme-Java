@@ -8,20 +8,22 @@ import javax.swing.WindowConstants;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Program started"); 
-        SandGenerator sandGenerator = new SandGenerator(1000,800);
+        ParticleGenerator sandGenerator = new ParticleGenerator(1000,800);
         MouseClickRecorder recorder = new MouseClickRecorder(sandGenerator);
         DrawingPanel drawingPanel = new DrawingPanel(sandGenerator);
-        ControlPanel controlPanel = new ControlPanel(sandGenerator);
+        ParticleControlPanel controlPanel = new ParticleControlPanel(sandGenerator);
+        GravityControlPanel gravityControlPanel = new GravityControlPanel(sandGenerator);
+        ControlPanelSwitcher controlPanelSwitcher = new ControlPanelSwitcher(controlPanel, gravityControlPanel);
         drawingPanel.addMouseMotionListener(recorder);
         drawingPanel.addComponentListener(new WindowResizeListener(sandGenerator));
         
         Timer timer = new Timer(); 
-        timer.scheduleAtFixedRate(new SandTimerTask(sandGenerator, drawingPanel, controlPanel), 10L, 20L);
+        timer.scheduleAtFixedRate(new ParticleTimerTask(sandGenerator, drawingPanel, controlPanel), 10L, 20L);
 
         JFrame frame = new JFrame();
         frame.addComponentListener(new WindowMoveListener(sandGenerator));
         frame.setSize(1000, 800);
-        frame.add(controlPanel, BorderLayout.WEST);
+        frame.add(controlPanelSwitcher, BorderLayout.WEST);
         frame.add(drawingPanel, BorderLayout.CENTER);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

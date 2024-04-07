@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.SwingUtilities;
 
 public class MouseClickRecorder extends MouseAdapter implements MouseMotionListener {
-	private SandGenerator sandGenerator;
+	private ParticleGenerator sandGenerator;
 
-	public MouseClickRecorder(SandGenerator sandGenerator) {
+	public MouseClickRecorder(ParticleGenerator sandGenerator) {
 		this.sandGenerator = sandGenerator;
 	}
 

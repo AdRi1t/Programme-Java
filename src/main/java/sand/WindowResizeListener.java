@@ -4,9 +4,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class WindowResizeListener extends ComponentAdapter {
-    private SandGenerator sandGenerator;
+    private ParticleGenerator sandGenerator;
 
-    public WindowResizeListener(SandGenerator sandGenerator) {
+    public WindowResizeListener(ParticleGenerator sandGenerator) {
         this.sandGenerator = sandGenerator;
     }
 

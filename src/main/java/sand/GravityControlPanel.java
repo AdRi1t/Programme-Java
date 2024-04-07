@@ -3,8 +3,9 @@ package sand;
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
-    transient SandGenerator sandGenerator;
+public class GravityControlPanel extends JPanel {
+    transient ParticleGenerator sandGenerator;
+    JLabel title;
     JSlider weightSlider;
     JSlider maxVelocitySlider;
     JSlider incrementTimeSlider;
@@ -15,13 +16,28 @@ public class ControlPanel extends JPanel {
     JLabel particleCountLabel;
     JLabel collisionLabel;
 
-    public ControlPanel(sand.SandGenerator sandGenerator) {
+    public GravityControlPanel(ParticleGenerator sandGenerator) {
         this.sandGenerator = sandGenerator;
-        setLayout(new GridLayout(0, 1));
+        this.setBackground(Color.lightGray);
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 0.2;
+        gbc.weighty = 0.2;
+        setLayout(layout);
 
-        weightSlider = createSlider(10, 20, 10);
-        maxVelocitySlider = createSlider(0, 100, 10);
-        incrementTimeSlider = createSlider(0, 100, 10);
+        title = new JLabel("Gravity Control");
+        title.setBackground(Color.GRAY);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        titlePanel.setBackground(Color.lightGray);
+        titlePanel.add(title);
+
+        weightSlider = createSlider(8, 20, 10);
+        maxVelocitySlider = createSlider(0, 200, 10);
+        incrementTimeSlider = createSlider(0, 200, 10);
 
         weightLabel = createLabel();
         maxVelocityLabel = createLabel();
@@ -30,7 +46,7 @@ public class ControlPanel extends JPanel {
         fpsLabel = createInfoLabel();
         particleCountLabel = createInfoLabel();
         collisionLabel = createInfoLabel();
-        
+
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
         infoPanel.setBackground(Color.lightGray);
@@ -42,10 +58,20 @@ public class ControlPanel extends JPanel {
         maxVelocitySlider.addChangeListener(e -> updateVelocityValue());
         incrementTimeSlider.addChangeListener(e -> updateIncrementTimeValue());
 
-        add(createSliderPanel(weightLabel, weightSlider));
-        add(createSliderPanel(maxVelocityLabel, maxVelocitySlider));
-        add(createSliderPanel(incrementTimeLabel, incrementTimeSlider));  
-        add(infoPanel);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 0.1;
+        add(titlePanel, gbc);
+        gbc.gridy = 1;
+        gbc.weighty = 0.2;
+        add(createSliderPanel(weightLabel, weightSlider), gbc);
+        gbc.gridy = 2;
+        add(createSliderPanel(maxVelocityLabel, maxVelocitySlider), gbc);
+        gbc.gridy = 3;
+        add(createSliderPanel(incrementTimeLabel, incrementTimeSlider),gbc);
+        gbc.gridy = 4;
+        gbc.weighty = 0.1;
+        add(infoPanel, gbc);
 
         updateWeightValue();
         updateVelocityValue();
@@ -99,10 +125,11 @@ public class ControlPanel extends JPanel {
     }
 
     private void updateIncrementTimeValue() {
-        sandGenerator.setIncrementTime((float)incrementTimeSlider.getValue()/1000);
-        incrementTimeLabel.setText("Temps d'incrémentation : " + (float)incrementTimeSlider.getValue()/1000 + "s");
+        sandGenerator.setIncrementTime((float) incrementTimeSlider.getValue() / 1000);
+        incrementTimeLabel.setText(
+                "Temps d'incrémentation : " + (float) incrementTimeSlider.getValue() / 1000 + "s");
     }
-    
+
     public void updateFPS(int fps) {
         fpsLabel.setText(" FPS: " + fps);
     }
@@ -112,6 +139,6 @@ public class ControlPanel extends JPanel {
     }
 
     public void updateCollision(float collision) {
-        collisionLabel.setText(" Collision: " + (int)collision + " per second");
+        collisionLabel.setText(" Collision: " + (int) collision + " per second");
     }
 }

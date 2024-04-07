@@ -2,14 +2,14 @@ package sand;
 
 import java.util.TimerTask;
 
-public class SandTimerTask extends TimerTask {
-    private SandGenerator sandGenerator;
+public class ParticleTimerTask extends TimerTask {
+    private ParticleGenerator sandGenerator;
     private DrawingPanel drawingPanel;
-    private ControlPanel controlPanel;
+    private ParticleControlPanel controlPanel;
     private long startTime = System.nanoTime();
     private int frames = 0;
 
-    public SandTimerTask(SandGenerator sandGenerator, DrawingPanel drawingPanel, ControlPanel controlPanel) {
+    public ParticleTimerTask(ParticleGenerator sandGenerator, DrawingPanel drawingPanel, ParticleControlPanel controlPanel) {
         this.controlPanel = controlPanel;
         this.sandGenerator = sandGenerator;
         this.drawingPanel = drawingPanel;

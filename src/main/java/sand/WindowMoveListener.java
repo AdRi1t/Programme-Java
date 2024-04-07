@@ -2,13 +2,12 @@ package sand;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.Point;
 
 public class WindowMoveListener extends ComponentAdapter {
     private float lastLocationX;
     private float lastLocationY;
-    private SandGenerator sandGenerator;
-    public WindowMoveListener(SandGenerator sandGenerator) {
+    private ParticleGenerator sandGenerator;
+    public WindowMoveListener(ParticleGenerator sandGenerator) {
         lastLocationX = 0;
         lastLocationY = 0;
         this.sandGenerator = sandGenerator;

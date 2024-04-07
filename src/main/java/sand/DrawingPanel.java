@@ -2,7 +2,7 @@ package sand;
 
 import javax.swing.JPanel;
 
-import sand.SandGenerator.Particle;
+import sand.ParticleGenerator.Particle;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,9 +12,9 @@ import java.util.List;
 public class DrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Color color = new Color(255, 255, 255);
-	private transient SandGenerator sandGenerator;
+	private transient ParticleGenerator sandGenerator;
 
-	public DrawingPanel(SandGenerator sandGenerator) {
+	public DrawingPanel(ParticleGenerator sandGenerator) {
 		this.sandGenerator = sandGenerator;
 		this.setBackground(color);
 	}
@@ -29,14 +29,14 @@ public class DrawingPanel extends JPanel {
 		g.clearRect(0, 0, getWidth(), getHeight());
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
-		List<Particle> particlesCopy = sandGenerator.getParticles();
+		List<Particle> particlesCopy = sandGenerator.getParticlesCopy();
 		for (Particle particle : particlesCopy) {
-			int x = (int)particle.getX();
-			int y = (int)particle.getY();
-			float weight = (int)particle.getWeight();
+			int x = (int) particle.getX();
+			int y = (int) particle.getY();
+			int weight = Math.round(particle.getWeight());
 			x -= weight / 2;
 			y -= weight / 2;
-			g2d.fillOval(x,y,Math.round(weight),Math.round(weight));
+			g2d.fillOval(x, y, weight, weight);
 		}
 		g2d.dispose();
 	}

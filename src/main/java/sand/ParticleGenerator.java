@@ -3,10 +3,11 @@ package sand;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 
-public class SandGenerator {
+public class ParticleGenerator {
 	ArrayList<Particle> particles;
-	private double gravity = 0;
+	private double gravity = 9;
 	private float incrementTime = 0.02f;
 	private float spawnWeight = 5;
 	private float maxRandomVelocity = 10;
@@ -14,10 +15,14 @@ public class SandGenerator {
 	private int collisionCount = 0;
 	private float collisionCountPerSecond = 0;
 	private float lastTime = 0;
+	boolean isParticle = true;
 	int width = 0;
 	int height = 0;
 
-	public SandGenerator(int width, int height) {
+	UnaryOperator<Float> randomFloat = (max) -> (random.nextFloat() * max)
+			* (random.nextInt(2) == 0 ? -1 : 1);
+
+	public ParticleGenerator(int width, int height) {
 		this.width = width;
 		this.height = height;
 		random = new Random();
@@ -45,6 +50,10 @@ public class SandGenerator {
 		this.maxRandomVelocity = maxRandomVelocity;
 	}
 
+	public void setGravity(double gravity) {
+		this.gravity = gravity;
+	}
+
 	public class Particle {
 		private float weight = 1;
 		private float x;
@@ -53,10 +62,10 @@ public class SandGenerator {
 		private float vy;
 
 		public Particle(float x, float y) {
-			this.x = x;
-			this.y = y;
-			this.vx = (random.nextFloat() * maxRandomVelocity) * (random.nextInt(2) == 0 ? -1 : 1);
-			this.vy = (random.nextFloat() * maxRandomVelocity) * (random.nextInt(2) == 0 ? -1 : 1);
+			this.x = x + randomFloat.apply(weight * 5);
+			this.y = y + randomFloat.apply(weight * 5);
+			this.vx = randomFloat.apply(maxRandomVelocity);
+			this.vy = randomFloat.apply(maxRandomVelocity);
 			this.weight = spawnWeight;
 		}
 
@@ -72,9 +81,15 @@ public class SandGenerator {
 			return weight;
 		}
 	}
+	
+	public List<Particle> getParticlesCopy() {
+		synchronized (particles) {
+			return new ArrayList<>(particles);
+		}
+	}
 
 	public void addParticle(int x, int y) {
-		particles.add(new Particle((float) x, (float) y));
+		particles.add(new Particle(x, y));
 	}
 
 	public List<Particle> getParticles() {
@@ -90,32 +105,71 @@ public class SandGenerator {
 	}
 
 	public void updateParticles() {
+		if (isParticle) {
+			updateParticleMovement();
+			handleCollisions();
+			updateCollisionsPerSecond();
+		}
+		if (!isParticle) {
+			updateParticleInteractions();
+		}
+	}
+
+	private void updateParticleMovement() {
 		for (Particle p : particles) {
 			p.x += p.vx * incrementTime;
 			p.y += p.vy * incrementTime;
-			if (p.x < 0) {
-				p.x = 0;
-				p.vx = -p.vx;
-				collisionCount++;
-			}
-			if (p.x > width - 4) {
-				p.x = width - 4;
-				p.vx = -p.vx;
-				collisionCount++;
-			}
-			if (p.y < 0) {
-				p.y = 0;
-				p.vy = -p.vy;
-				collisionCount++;
-			}
-			if (p.y > height - 4) {
-				p.y = height - 4;
-				p.vy = -p.vy;
-				collisionCount++;
+			handleParticleBoundaryCollision(p);
+		}
+	}
+
+	private void handleParticleBoundaryCollision(Particle p) {
+		if (p.x < 0) {
+			p.x = 0;
+			p.vx = -p.vx;
+			collisionCount++;
+		}
+		if (p.x > width - 4) {
+			p.x = width - 4;
+			p.vx = -p.vx;
+			collisionCount++;
+		}
+		if (p.y < 0) {
+			p.y = 0;
+			p.vy = -p.vy;
+			collisionCount++;
+		}
+		if (p.y > height - 4) {
+			p.y = height - 4;
+			p.vy = -p.vy;
+			collisionCount++;
+		}
+	}
+
+	private void updateParticleInteractions() {
+		final int size = particles.size();
+		for (int i = 0; i < size; i++) {
+			Particle p1 = particles.get(i);
+			for (int j = i + 1; j < size; j++) {
+				Particle p2 = particles.get(j);
+				handleParticleInteraction(p1, p2);
 			}
 		}
-		handleCollisions();
-		updateCollisionsPerSecond();
+	}
+
+	private void handleParticleInteraction(Particle p1, Particle p2) {
+		float dx = p1.x - p2.x;
+		float dy = p1.y - p2.y;
+		float distanceSquared = dx * dx + dy * dy;
+		float force = (float) (gravity * p1.weight * p2.weight / distanceSquared);
+		float fx = force * dx;
+		float fy = force * dy;
+		float ax = fx / p1.weight;
+		float ay = fy / p1.weight;
+		p1.vx += ax * incrementTime;
+		p1.vy += ay * incrementTime;
+		p1.x += p1.vx * incrementTime;
+		p1.y += p1.vy * incrementTime;
 	}
 
 	public void handleCollisions() {
@@ -162,8 +216,8 @@ public class SandGenerator {
 
 	public void moveParticles(float distanceX, float distanceY) {
 		for (Particle p : particles) {
-			p.x += 0.4*distanceX;
-			p.y += 0.4*distanceY;
+			p.x += 0.4 * distanceX;
+			p.y += 0.4 * distanceY;
 		}
 	}
 }
