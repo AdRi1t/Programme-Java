@@ -9,26 +9,26 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class ControlPanelSwitcher extends JPanel {
-    private CardLayout cl;
+    private CardLayout cardLayout;
     private ParticleControlPanel particleControlPanel;
     private GravityControlPanel gravityControlPanel;
     private ParticleGenerator particleGenerator;
 
     public ControlPanelSwitcher(ParticleGenerator particleGenerator) {
-        cl = new CardLayout();
+        cardLayout = new CardLayout();
 
         this.particleGenerator = particleGenerator;
         particleControlPanel = new ParticleControlPanel(particleGenerator);
         gravityControlPanel = new GravityControlPanel(particleGenerator);
 
-        JPanel cards = new JPanel(cl);
+        JPanel cards = new JPanel(cardLayout);
         cards.add(particleControlPanel, "Particle Control");
         cards.add(gravityControlPanel, "Gravity Control");
 
         JButton btn = new JButton("Switch");
         btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cl.next(cards);
+                cardLayout.next(cards);
                 if (particleGenerator.isParticle()) {
                     particleGenerator.setGravityOn();
                 } else {

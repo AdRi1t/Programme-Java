@@ -5,10 +5,10 @@ import java.awt.event.*;
 import javax.swing.SwingUtilities;
 
 public class MouseClickRecorder extends MouseAdapter implements MouseMotionListener {
-	private ParticleGenerator sandGenerator;
+	private ParticleGenerator particleGenerator;
 
 	public MouseClickRecorder(ParticleGenerator sandGenerator) {
-		this.sandGenerator = sandGenerator;
+		this.particleGenerator = sandGenerator;
 	}
 
 	@Override
@@ -17,10 +17,10 @@ public class MouseClickRecorder extends MouseAdapter implements MouseMotionListe
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			int mouseX = e.getX();
 			int mouseY = e.getY();
-			sandGenerator.addParticle(mouseX, mouseY);
+			particleGenerator.addParticle(mouseX, mouseY);
 		}
 		if (SwingUtilities.isRightMouseButton(e)) {
-			sandGenerator.clearParticles();
+			particleGenerator.clearParticles();
 		}
 	}
 
@@ -30,10 +30,10 @@ public void mouseClicked(MouseEvent e) {
     if (SwingUtilities.isLeftMouseButton(e)) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        sandGenerator.addParticle(mouseX, mouseY);
+        particleGenerator.addParticle(mouseX, mouseY);
     }
     if (SwingUtilities.isRightMouseButton(e)) {
-        sandGenerator.clearParticles();
+        particleGenerator.clearParticles();
     }
 }
 

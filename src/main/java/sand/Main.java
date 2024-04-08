@@ -1,7 +1,7 @@
 package sand;
 
 import java.awt.BorderLayout;
-import java.util.Timer;
+import javax.swing.Timer;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -16,8 +16,7 @@ public class Main {
         drawingPanel.addMouseListener(recorder);
         drawingPanel.addComponentListener(new WindowResizeListener(particleGenerator));
         
-        Timer timer = new Timer(); 
-        timer.scheduleAtFixedRate(new ParticleTimerTask(particleGenerator, drawingPanel, controlPanelSwitcher), 10L, 20L);
+        ParticleTimerTask particleTimerTask = new ParticleTimerTask(particleGenerator, drawingPanel, controlPanelSwitcher, 20);
 
         JFrame frame = new JFrame();
         frame.addComponentListener(new WindowMoveListener(particleGenerator));

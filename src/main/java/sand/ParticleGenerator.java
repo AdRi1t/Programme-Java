@@ -7,10 +7,10 @@ import java.util.Random;
 import java.util.function.UnaryOperator;
 
 public class ParticleGenerator {
-	ArrayList<Particle> particles;
+	List<Particle> particles;
 	private float gravity = 0;
 	private float incrementTime = 0.02f;
-	private float spawnWeight = 5;
+	private float spawnRadius = 5;
 	private float maxRandomVelocity = 10;
 	private Random random;
 	private int collisionCount = 0;
@@ -40,7 +40,7 @@ public class ParticleGenerator {
 	}
 
 	public void setWeight(int weight) {
-		spawnWeight = weight;
+		spawnRadius = weight;
 	}
 
 	public void setIncrementTime(float incrementTime) {
@@ -79,7 +79,7 @@ public class ParticleGenerator {
 			this.y = y + randomFloat.apply(radius * 5);
 			this.vx = randomFloat.apply(maxRandomVelocity);
 			this.vy = randomFloat.apply(maxRandomVelocity);
-			this.radius = spawnWeight;
+			this.radius = spawnRadius;
 		}
 
 		public float getX() {
@@ -241,7 +241,6 @@ public class ParticleGenerator {
 				totalAy += ay;
 			}
 		}
-
 		p.vx += totalAx * incrementTime;
 		p.vy += totalAy * incrementTime;
 	}

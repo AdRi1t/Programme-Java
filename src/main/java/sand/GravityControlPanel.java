@@ -124,7 +124,7 @@ public class GravityControlPanel extends JPanel {
 
     private void updateWeightValue() {
         sandGenerator.setWeight(weightSlider.getValue());
-        weightLabel.setText("Poids : " + weightSlider.getValue());
+        weightLabel.setText("Masse : " + weightSlider.getValue());
     }
 
     private void updateVelocityValue() {
@@ -139,15 +139,15 @@ public class GravityControlPanel extends JPanel {
     }
 
     public void updateFPS(int fps) {
-        fpsLabel.setText(" FPS: " + fps);
+        fpsLabel.setText("FPS: " + fps);
     }
 
     public void updateParticleCount() {
-        particleCountLabel.setText(" Particles: " + sandGenerator.getNbParticles());
+        particleCountLabel.setText("Particles: " + sandGenerator.getNbParticles());
     }
 
     public void updateCollision(float collision) {
-        collisionLabel.setText(" Collision: " + (int) collision + " per second");
+        collisionLabel.setText("Collision: " + (int) collision + " per second");
     }
 
     public void updateGravity() {
