@@ -9,9 +9,11 @@ public class GravityControlPanel extends JPanel {
     JSlider weightSlider;
     JSlider maxVelocitySlider;
     JSlider incrementTimeSlider;
+    JSlider gravitySlider;
     JLabel weightLabel;
     JLabel maxVelocityLabel;
     JLabel incrementTimeLabel;
+    JLabel gravityLabel;
     JLabel fpsLabel;
     JLabel particleCountLabel;
     JLabel collisionLabel;
@@ -35,13 +37,15 @@ public class GravityControlPanel extends JPanel {
         titlePanel.setBackground(Color.lightGray);
         titlePanel.add(title);
 
-        weightSlider = createSlider(8, 20, 10);
+        weightSlider = createSlider(8, 50, 10);
         maxVelocitySlider = createSlider(0, 200, 10);
-        incrementTimeSlider = createSlider(0, 200, 10);
+        incrementTimeSlider = createSlider(0, 100, 10);
+        gravitySlider = createSlider(-20, 20, 0);
 
         weightLabel = createLabel();
         maxVelocityLabel = createLabel();
         incrementTimeLabel = createLabel();
+        gravityLabel = createLabel();
 
         fpsLabel = createInfoLabel();
         particleCountLabel = createInfoLabel();
@@ -57,6 +61,7 @@ public class GravityControlPanel extends JPanel {
         weightSlider.addChangeListener(e -> updateWeightValue());
         maxVelocitySlider.addChangeListener(e -> updateVelocityValue());
         incrementTimeSlider.addChangeListener(e -> updateIncrementTimeValue());
+        gravitySlider.addChangeListener(e -> updateGravity());
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -68,20 +73,23 @@ public class GravityControlPanel extends JPanel {
         gbc.gridy = 2;
         add(createSliderPanel(maxVelocityLabel, maxVelocitySlider), gbc);
         gbc.gridy = 3;
-        add(createSliderPanel(incrementTimeLabel, incrementTimeSlider),gbc);
+        add(createSliderPanel(incrementTimeLabel, incrementTimeSlider), gbc);
         gbc.gridy = 4;
+        add(createSliderPanel(gravityLabel, gravitySlider), gbc);
+        gbc.gridy = 5;
         gbc.weighty = 0.1;
         add(infoPanel, gbc);
 
         updateWeightValue();
         updateVelocityValue();
         updateIncrementTimeValue();
+        updateGravity();
         updateFPS(50);
         updateParticleCount();
     }
 
     private JSlider createSlider(int min, int max, int value) {
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, value);
+        JSlider slider = new JSlider(SwingConstants.HORIZONTAL, min, max, value);
         slider.setBackground(Color.lightGray);
         slider.setMajorTickSpacing((max - min) / 5);
         slider.setMinorTickSpacing((max - min) / 20);
@@ -92,7 +100,7 @@ public class GravityControlPanel extends JPanel {
 
     private JLabel createLabel() {
         JLabel label = new JLabel();
-        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         return label;
     }
 
@@ -140,5 +148,10 @@ public class GravityControlPanel extends JPanel {
 
     public void updateCollision(float collision) {
         collisionLabel.setText(" Collision: " + (int) collision + " per second");
+    }
+
+    public void updateGravity() {
+        sandGenerator.setGravity((float) gravitySlider.getValue() / 10);
+        gravityLabel.setText("Gravité : " + (float) gravitySlider.getValue() / 10);
     }
 }

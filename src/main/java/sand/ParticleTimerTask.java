@@ -5,11 +5,12 @@ import java.util.TimerTask;
 public class ParticleTimerTask extends TimerTask {
     private ParticleGenerator sandGenerator;
     private DrawingPanel drawingPanel;
-    private ParticleControlPanel controlPanel;
+    private ControlPanelSwitcher controlPanel;
     private long startTime = System.nanoTime();
     private int frames = 0;
 
-    public ParticleTimerTask(ParticleGenerator sandGenerator, DrawingPanel drawingPanel, ParticleControlPanel controlPanel) {
+    public ParticleTimerTask(ParticleGenerator sandGenerator, DrawingPanel drawingPanel,
+            ControlPanelSwitcher controlPanel) {
         this.controlPanel = controlPanel;
         this.sandGenerator = sandGenerator;
         this.drawingPanel = drawingPanel;

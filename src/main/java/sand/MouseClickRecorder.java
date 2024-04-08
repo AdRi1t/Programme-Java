@@ -24,4 +24,17 @@ public class MouseClickRecorder extends MouseAdapter implements MouseMotionListe
 		}
 	}
 
+	@Override
+public void mouseClicked(MouseEvent e) {
+    super.mouseClicked(e);
+    if (SwingUtilities.isLeftMouseButton(e)) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
+        sandGenerator.addParticle(mouseX, mouseY);
+    }
+    if (SwingUtilities.isRightMouseButton(e)) {
+        sandGenerator.clearParticles();
+    }
+}
+
 }
