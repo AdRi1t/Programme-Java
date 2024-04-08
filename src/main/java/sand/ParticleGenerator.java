@@ -263,16 +263,18 @@ public class ParticleGenerator {
 					float vy1 = p1.vy;
 					float vx2 = p2.vx;
 					float vy2 = p2.vy;
-					float totalWeigt = p1.radius + p2.radius;
+					float weightP1 = (float) Math.PI * p1.radius * p1.radius;
+					float weightP2 = (float) Math.PI * p2.radius * p2.radius;
+					float totalWeigt = weightP1 + weightP2;
 
-					p1.vx = vx1 * (p1.radius - p2.radius) / totalWeigt
-							+ vx2 * 2 * p2.radius / totalWeigt;
-					p1.vy = vy1 * (p1.radius - p2.radius) / totalWeigt
-							+ vy2 * 2 * p2.radius / totalWeigt;
-					p2.vx = vx2 * (p2.radius - p1.radius) / totalWeigt
-							+ vx1 * 2 * p1.radius / totalWeigt;
-					p2.vy = vy2 * (p2.radius - p1.radius) / totalWeigt
-							+ vy1 * 2 * p1.radius / totalWeigt;
+					p1.vx = vx1 * (weightP1 - weightP2) / totalWeigt
+							+ vx2 * 2 * weightP2 / totalWeigt;
+					p1.vy = vy1 * (weightP1 - weightP2)  / totalWeigt
+							+ vy2 * 2 * weightP2 / totalWeigt;
+					p2.vx = vx2 * (weightP2 - weightP1) / totalWeigt
+							+ vx1 * 2 * weightP1 / totalWeigt;
+					p2.vy = vy2 * (weightP2 - weightP1) / totalWeigt
+							+ vy1 * 2 * weightP1 / totalWeigt;
 
 				}
 			}
